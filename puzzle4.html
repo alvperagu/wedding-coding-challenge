@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reto 4 - El Algoritmo Oculto</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <!-- Mobile styles are now in css/style.css -->
 </head>
+
 <body>
     <nav class="navbar">
         <div class="nav-content">
@@ -14,7 +17,6 @@
             <div class="nav-links">
                 <a href="index.html" class="nav-link">Inicio</a>
                 <a href="puzzle1.html" class="nav-link">Retos</a>
-                <a href="final.html" class="nav-link">Final</a>
             </div>
         </div>
     </nav>
@@ -23,17 +25,25 @@
         <div class="puzzle-container fade-in">
             <h1 class="puzzle-title">Reto 4 — El Algoritmo Oculto</h1>
             <p class="puzzle-description">
-                Se ha descubierto un método de encriptación secreto. Solo tenemos los ejemplos a continuación.
-                Tu misión: deducir el patrón y encontrar la salida para <strong>"SECRET"</strong>.
+                Se ha descubierto un método de encriptación secreto. Solo tenemos los ejemplos a continuación.<br>
+                Tu misión: deducir el patrón y encontrar la salida para <strong>"SECRET"</strong>.<br>
                 Este es un reto de razonamiento manual — ningún cifrado conocido aplica directamente.
             </p>
 
             <div class="code-block">
-                <pre>
-CODE   → FQIG
-LOGIC  → NPLLB
-BRAIN  → DTCGO
-PUZZLE → RWCCQI</pre>
+                <div class="nocopy-block" style="position:relative;">
+                    <!-- // Reglas (índice inicia en 1):
+                    // 1. Si la letra está en posición impar (1,3,5...), vocales avanzan 2, consonantes retroceden 1.
+                    // 2. Si la letra está en posición par (2,4,6...), vocales retroceden 2, consonantes avanzan 1. -->
+                    <pre style="user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;pointer-events:none;">
+CODE   → BMCC
+LOGIC  → KMFGB
+BRAIN  → ASCGM
+PUZZLE → OSYAKC
+ENIGMA → GOKHLY
+                    </pre>
+                    <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;cursor:not-allowed;"></div>
+                </div>
             </div>
 
             <p class="puzzle-description">¿Qué produce el cifrado para <strong>SECRET</strong>?</p>
@@ -41,53 +51,137 @@ PUZZLE → RWCCQI</pre>
             <div class="puzzle-form">
                 <div style="position:relative;display:inline-block;">
                     <input id="ans4" type="text" class="puzzle-input" placeholder="Tu respuesta (6 letras)" maxlength="6" />
-                    <span class="tooltip" style="position:absolute;top:-30px;left:0;background:var(--color-bg-secondary);color:var(--color-accent-primary);padding:4px 10px;border-radius:6px;font-size:0.9em;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:10;">Por favor, omite la letra ñ.</span>
                 </div>
                 <button id="submit4" class="button submit-button">Verificar Respuesta</button>
             </div>
 
             <div id="clue4" class="clue hidden"></div>
+            <button id="pistaBtn" class="button" style="display:none;margin-top:10px;">Pista</button>
+            <div id="pistaMsg" class="clue hidden" style="margin-top:10px;"></div>
 
             <div class="navigation-buttons">
-                <a href="final.html">
-                    <button id="nextBtn4" class="button next-button disabled" disabled>
-                        Ir al Reto Final
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </a>
+                <!-- Final step removed -->
+            <div id="congrats" class="congrats-container hidden" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2em;">
+                <!-- Eliminado: enhorabuena, ahora en enhorabuena.html -->
+            </div>
             </div>
         </div>
     </main>
 
     <script>
-        // Obfuscated answer: UFGEJX
-        function getObfuscatedAnswer() {
-            // Simple obfuscation: char codes
-            return [85,70,71,69,74,88].map(c=>String.fromCharCode(c)).join("");
+        // Intentos fallidos para mostrar pista
+        let failCount = 0;
+        // Reset failCount on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            failCount = 0;
+            document.getElementById('pistaBtn').style.display = 'none';
+            document.getElementById('pistaMsg').classList.add('hidden');
+            document.getElementById('pistaMsg').innerText = '';
+        });
+        // Algoritmo: reglas combinadas por índice (índice inicia en 1)
+        function encrypt(word) {
+            const vowels = 'AEIOU';
+            return word.toUpperCase().split('').map((ch, i) => {
+                const idx = i + 1;
+                if (idx % 2 === 0) { // par
+                    if (vowels.includes(ch)) {
+                        // Vowel: shift -2
+                        let code = ch.charCodeAt(0) - 2;
+                        if (code < 65) code += 26;
+                        return String.fromCharCode(code);
+                    } else if (ch >= 'A' && ch <= 'Z') {
+                        // Consonant: shift +1
+                        let code = ch.charCodeAt(0) + 1;
+                        if (code > 90) code -= 26;
+                        return String.fromCharCode(code);
+                    } else {
+                        return ch;
+                    }
+                } else { // impar
+                    if (vowels.includes(ch)) {
+                        // Vowel: shift +2
+                        let code = ch.charCodeAt(0) + 2;
+                        if (code > 90) code -= 26;
+                        return String.fromCharCode(code);
+                    } else if (ch >= 'A' && ch <= 'Z') {
+                        // Consonant: shift -1
+                        let code = ch.charCodeAt(0) - 1;
+                        if (code < 65) code += 26;
+                        return String.fromCharCode(code);
+                    } else {
+                        return ch;
+                    }
+                }
+            }).join('');
         }
 
-        // Tooltip logic
-        const ansInput = document.getElementById('ans4');
-        const tooltip = ansInput.parentElement.querySelector('.tooltip');
-        ansInput.addEventListener('focus', () => {
-            tooltip.style.opacity = 1;
-        });
-        ansInput.addEventListener('blur', () => {
-            tooltip.style.opacity = 0;
+        // Obfuscated answer for "SECRET" with new rules (índice inicia en 1)
+        function getObfuscatedAnswer() {
+            let arr = ["S", "E", "C", "R", "E", "T"];
+            const vowels = 'AEIOU';
+            let s = arr.map((ch, i) => {
+                const idx = i + 1;
+                if (idx % 2 === 0) {
+                    // par: vocales -2, consonantes +1
+                    if (vowels.includes(ch)) {
+                        let code = ch.charCodeAt(0) - 2;
+                        if (code < 65) code += 26;
+                        return String.fromCharCode(code);
+                    } else {
+                        let code = ch.charCodeAt(0) + 1;
+                        if (code > 90) code -= 26;
+                        return String.fromCharCode(code);
+                    }
+                } else {
+                    // impar: vocales +2, consonantes -1
+                    if (vowels.includes(ch)) {
+                        let code = ch.charCodeAt(0) + 2;
+                        if (code > 90) code -= 26;
+                        return String.fromCharCode(code);
+                    } else {
+                        let code = ch.charCodeAt(0) - 1;
+                        if (code < 65) code += 26;
+                        return String.fromCharCode(code);
+                    }
+                }
+            }).join('');
+            // Obfuscate: convert to char codes and back
+            let codes = s.split('').map(c => c.charCodeAt(0) + 7);
+            let decoded = codes.map(c => String.fromCharCode(c - 7)).join('');
+            return decoded;
+        }
+
+        // Bloquear copiar/seleccionar en el bloque de ejemplo
+        document.querySelectorAll('.nocopy-block').forEach(block =>
+        {
+            block.addEventListener('copy', e => e.preventDefault());
+            block.addEventListener('contextmenu', e => e.preventDefault());
         });
 
-        document.getElementById('submit4').addEventListener('click', () => {
+        document.getElementById('submit4').addEventListener('click', () =>
+        {
             const val = document.getElementById('ans4').value.trim().toUpperCase();
             if (val === getObfuscatedAnswer()) {
-                const c = document.getElementById('clue4');
-                c.classList.remove('hidden');
-                c.innerText = '🔥 ¡Impresionante! Pista: La primera posición es el número 2.';
-                document.getElementById('nextBtn4').disabled = false;
-                document.getElementById('nextBtn4').classList.remove('disabled');
+                window.location.href = 'enhorabuena.html';
+                failCount = 0;
+                document.getElementById('pistaBtn').style.display = 'none';
+                document.getElementById('pistaMsg').classList.add('hidden');
+                document.getElementById('pistaMsg').innerText = '';
             } else {
-                alert('Incorrecto — revisa los ejemplos cuidadosamente y busca los desplazamientos de letras por posición.');
+                failCount++;
+                alert('Incorrecto — Asegurate que estás usando mayusculas. - Otra pista omite la letra Ñ');
+                if (failCount >= 3) {
+                    document.getElementById('pistaBtn').style.display = 'inline-block';
+                }
             }
+        // Mostrar pista al hacer click
+        document.getElementById('pistaBtn').addEventListener('click', () => {
+            const pistaMsg = document.getElementById('pistaMsg');
+            pistaMsg.innerText = 'Como buen informático debes usar el inspector de Google Chrome para averiguar una pista. El resultado está ofuscado para que no te pases de listo.';
+            pistaMsg.classList.remove('hidden');
+        });
         });
     </script>
 </body>
+
 </html>

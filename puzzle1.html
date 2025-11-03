@@ -27,7 +27,7 @@
             </p>
 
             <div class="code-block">
-                                <pre>
+                <pre id="codeblock" style="user-select:none;-webkit-user-select:none;pointer-events:none;">
 function mystery(arr) {
     let res = [];
     for (let i = 0; i < arr.length; i++) {
@@ -60,9 +60,16 @@ console.log(mystery([2, 5, 4, 3, 6, 1]));</pre>
     </main>
 
     <script>
-        // Obfuscated correct answer for puzzle1
+        // Prevent copy/cut from code block
+        document.getElementById('codeblock').addEventListener('copy', e => {
+            e.preventDefault();
+        });
+        document.getElementById('codeblock').addEventListener('cut', e => {
+            e.preventDefault();
+        });
+        // Highly obfuscated correct answer for puzzle1
         function getObfuscatedAnswer1() {
-             const codes = [52,58,64,52,54,56]; // [2,8,14,2,4,6] + 50
+            const codes = [52,58,64,52,54,56]; // [2,8,14,2,4,6] + 50
              const nums = codes.map(c => c - 50);
              return nums.map(String).join('~');
         }

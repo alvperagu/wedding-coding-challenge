@@ -1,3 +1,41 @@
+/* Extra mobile styles for all HTML pages */
+@media (max-width: 600px) {
+    .container {
+        padding: 0.5em;
+    }
+    .puzzle-container {
+        padding: 1em;
+    }
+    .puzzle-title {
+        font-size: 1.3em;
+    }
+    .puzzle-description {
+        font-size: 1em;
+    }
+    .puzzle-input {
+        font-size: 1.1em;
+        width: 90vw;
+        max-width: 300px;
+    }
+    .button {
+        font-size: 1em;
+        padding: 0.7em 1.2em;
+    }
+    .code-block pre {
+        font-size: 0.95em;
+        padding: 0.7em;
+    }
+    .congrats-container img {
+        width: 90vw;
+        max-width: 300px;
+    }
+    .congrats-container h2 {
+        font-size: 1.3em;
+    }
+    .congrats-container p {
+        font-size: 1em;
+    }
+}
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap');
 
