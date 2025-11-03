@@ -12,9 +12,7 @@
         <div class="nav-content">
             <a href="index.html" class="nav-logo">Reto de Código</a>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Inicio</a>
-                <a href="puzzle1.html" class="nav-link">Retos</a>
-                <a href="final.html" class="nav-link">Final</a>
+                
             </div>
         </div>
     </nav>
@@ -32,11 +30,12 @@
             </div>
 
             <p class="puzzle-description">
-                ¿Qué letra está ahora en la posición 4 (base 1) de la cadena permutada?
+                Dos equipos y un misterio por resolver… lo que el equipo de Ana necesitaba para avanzar estaba, por error, en la sala
+                del otro equipo. ¿Qué objeto era?
             </p>
 
             <div class="puzzle-form">
-                <input id="ans2" type="text" class="puzzle-input" placeholder="una letra" maxlength="1" />
+                <input id="ans2" type="text" class="puzzle-input" placeholder="Respuesta"/>
                 <button id="submit2" class="button submit-button">Verificar Respuesta</button>
             </div>
 
@@ -56,12 +55,13 @@
     <script>
         document.getElementById('submit2').addEventListener('click', () => {
             const a = document.getElementById('ans2').value.trim().toLowerCase();
-            // calculate: original "encrypt" -> permutation [3,1,4,2,6,7,5] => r c n r e p y
-            // position 4 is "r"
-            if (a === 'r') {
+            // Obfuscated answer: 'pincel'
+            const arr = [112,105,110,99,101,108];
+            const correct = String.fromCharCode(...arr);
+            if (a === correct) {
                 const c = document.getElementById('clue2');
                 c.classList.remove('hidden');
-                c.innerText = '🎉 ¡Correcto! Pista: La cuarta posición es el número 5.';
+                c.innerText = '¡Código descifrado! Cuando combinan amor y lógica, nada se les resiste. El siguiente reto los espera...';
                 document.getElementById('nextBtn2').disabled = false;
                 document.getElementById('nextBtn2').classList.remove('disabled');
             } else {

@@ -79,9 +79,7 @@
         <div class="nav-content">
             <a href="index.html" class="nav-logo">Reto de Código</a>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Inicio</a>
-                <a href="puzzle1.html" class="nav-link">Retos</a>
-                <a href="final.html" class="nav-link">Final</a>
+                
             </div>
         </div>
     </nav>
@@ -232,13 +230,24 @@
 
     function checkWinCondition()
     {
-        if (checkWin())
-        {
+        if (checkWin()) {
             const clue = document.getElementById('clue3');
             clue.classList.remove('hidden');
-            clue.innerText = '✅ ¡Muy bien! Pista: La tercera posición es el número 9.';
+            clue.innerText ='¡Pieza a pieza, lo lograron! Así como en el amor, todo encaja cuando trabajan juntos.';
             document.getElementById('nextBtn3').disabled = false;
             document.getElementById('nextBtn3').classList.remove('disabled');
+
+            // Show full photo
+            const main = document.querySelector('main.container');
+            const fullPhoto = document.createElement('img');
+            fullPhoto.src = 'photo.jpeg';
+            fullPhoto.alt = 'Foto completa';
+            fullPhoto.style.maxWidth = '95vw';
+            fullPhoto.style.width = '400px';
+            fullPhoto.style.borderRadius = '16px';
+            fullPhoto.style.boxShadow = '0 4px 24px rgba(0,0,0,0.2)';
+            fullPhoto.style.margin = '2em auto';
+            main.appendChild(fullPhoto);
         }
     }
 </script>

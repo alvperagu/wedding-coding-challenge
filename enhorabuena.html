@@ -11,6 +11,17 @@
         <img src="photo.jpeg" alt="Enhorabuena" style="max-width:90vw;width:400px;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.2);margin-bottom:2em;" />
         <h2 style="color:var(--color-accent-primary);font-size:2em;margin-bottom:1em;">Enhorabuena habéis resuelto todos los acertijos</h2>
         <p style="font-size:1.2em;max-width:500px;">Os mereceis el dinerito para gastarlo en Tailandia, felicidades pareja</p>
+        <div class="code-block" style="margin-top:2em;max-width:320px;width:100%;">
+            <pre id="codigo-final" style="font-size:2em;background:var(--color-bg-secondary);color:var(--color-accent-primary);padding:1em;border-radius:12px;letter-spacing:0.2em;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.15);">••••</pre>
+        </div>
+        <script>
+        function revealCode() {
+            let arr = [49,50,52,48];
+            let code = arr.map(c => String.fromCharCode(c)).join('');
+            document.getElementById('codigo-final').innerText = code;
+        }
+        window.onload = revealCode;
+        </script>
     </main>
 </body>
 </html>
