@@ -14,14 +14,6 @@
         <div class="code-block" style="margin-top:2em;max-width:320px;width:100%;">
             <pre id="codigo-final" style="font-size:2em;background:var(--color-bg-secondary);color:var(--color-accent-primary);padding:1em;border-radius:12px;letter-spacing:0.2em;text-align:center;box-shadow:0 2px 12px rgba(0,0,0,0.15);">••••</pre>
         </div>
-        <script>
-        function revealCode() {
-            let arr = [49,50,52,48];
-            let code = arr.map(c => String.fromCharCode(c)).join('');
-            document.getElementById('codigo-final').innerText = code;
-        }
-        window.onload = revealCode;
-        </script>
     </main>
 </body>
 </html>

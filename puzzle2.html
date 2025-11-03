@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reto 2 - Reconstrucción</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <nav class="navbar">
@@ -21,15 +21,6 @@
         <div class="puzzle-container fade-in">
             <h1 class="puzzle-title">Reto 2 — Reconstrucción</h1>
             <p class="puzzle-description">
-                Tomamos la palabra "encrypt" y permutamos sus letras usando la permutación secreta [3,1,4,2,6,7,5] (base 1).
-                El resultado es:
-            </p>
-            
-            <div class="code-block">
-                <pre>rcnrepy</pre>
-            </div>
-
-            <p class="puzzle-description">
                 Dos equipos y un misterio por resolver… lo que el equipo de Ana necesitaba para avanzar estaba, por error, en la sala
                 del otro equipo. ¿Qué objeto era?
             </p>
@@ -39,16 +30,12 @@
                 <button id="submit2" class="button submit-button">Verificar Respuesta</button>
             </div>
 
-            <div id="clue2" class="clue hidden"></div>
+            <div id="clue" class="clue hidden"></div>
+            <div id="celebration"
+                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;"></div>
+            <div id="sparkle-layer"
+                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:10000;"></div>
 
-            <div class="navigation-buttons">
-                <a href="puzzle3.html">
-                    <button id="nextBtn2" class="button next-button disabled" disabled>
-                        Ir al Reto 3
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </a>
-            </div>
         </div>
     </main>
 
@@ -58,13 +45,140 @@
             // Obfuscated answer: 'pincel'
             const arr = [112,105,110,99,101,108];
             const correct = String.fromCharCode(...arr);
-            if (a === correct) {
-                const c = document.getElementById('clue2');
+            if (a === correct) 
+            {
+                // Celebration animation
+                const celebration = document.getElementById('celebration');
+                const sparkleLayer = document.getElementById('sparkle-layer');
+                celebration.innerHTML = '';
+                sparkleLayer.innerHTML = '';
+                celebration.style.display = 'block';
+                sparkleLayer.style.display = 'block';
+
+                // Create a background glow effect
+                const glow = document.createElement('div');
+                glow.style.position = 'fixed';
+                glow.style.top = '0';
+                glow.style.left = '0';
+                glow.style.width = '100vw';
+                glow.style.height = '100vh';
+                glow.style.background = 'radial-gradient(circle at center, rgba(255,182,193,0.2) 0%, rgba(255,182,193,0) 70%)';
+                glow.style.opacity = '0';
+                celebration.appendChild(glow);
+                glow.animate([
+                    { opacity: 0 },
+                    { opacity: 1 },
+                    { opacity: 0 }
+                ], {
+                    duration: 3000,
+                    easing: 'ease-in-out'
+                });
+
+                // Floating hearts with trails
+                const heartEmojis = ['💖', '❤️', '💝', '💕', '💗'];
+                for (let i = 0; i < 24; i++)
+                {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.position = 'absolute';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = (Math.random() * 30 + 70) + 'vh';
+                    heart.style.fontSize = (Math.random() * 2.5 + 1.2) + 'em';
+                    heart.style.opacity = (Math.random() * 0.4 + 0.6).toFixed(2);
+                    heart.style.filter = 'blur(0.2px)';
+                    celebration.appendChild(heart);
+
+                    // Create heart trail
+                    const trail = document.createElement('div');
+                    trail.style.position = 'absolute';
+                    trail.style.left = heart.style.left;
+                    trail.style.top = heart.style.top;
+                    trail.style.fontSize = heart.style.fontSize;
+                    trail.innerHTML = heart.innerHTML;
+                    trail.style.opacity = '0.3';
+                    trail.style.filter = 'blur(2px)';
+                    celebration.appendChild(trail);
+
+                    const duration = 2500 + Math.random() * 1000;
+                    const floatY = -70 - Math.random() * 30;
+                    const floatX = (Math.random() - 0.5) * 40;
+
+                    heart.animate([
+                        { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: heart.style.opacity },
+                        { transform: `translate(${floatX}px, ${floatY}vh) scale(1.2) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration,
+                        easing: 'ease-out',
+                        fill: 'forwards'
+                    });
+
+                    trail.animate([
+                        { transform: 'translate(0, 0) scale(1)', opacity: '0.3', filter: 'blur(2px)' },
+                        { transform: `translate(${floatX * 0.7}px, ${floatY * 0.7}vh) scale(0.8)`, opacity: 0, filter: 'blur(4px)' }
+                    ], {
+                        duration: duration * 0.8,
+                        easing: 'ease-out',
+                        fill: 'forwards'
+                    });
+                }
+
+                // Sparkles with color variation
+                const sparkleColors = ['#FFD700', '#FF69B4', '#87CEEB', '#DDA0DD'];
+                for (let i = 0; i < 40; i++)
+                {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'absolute';
+                    sparkle.style.width = (Math.random() * 4 + 3) + 'px';
+                    sparkle.style.height = sparkle.style.width;
+                    sparkle.style.background = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+                    sparkle.style.borderRadius = '50%';
+                    sparkle.style.left = Math.random() * 100 + 'vw';
+                    sparkle.style.top = Math.random() * 100 + 'vh';
+                    const glowColor = sparkle.style.background.replace(')', ', 0.8)').replace('rgb', 'rgba');
+                    sparkle.style.boxShadow = `0 0 10px ${glowColor}, 0 0 20px ${glowColor}`;
+                    sparkleLayer.appendChild(sparkle);
+
+                    const delay = Math.random() * 1000;
+                    setTimeout(() =>
+                    {
+                        sparkle.animate([
+                            { transform: 'scale(0) rotate(0deg)', opacity: 0 },
+                            { transform: 'scale(1) rotate(180deg)', opacity: 1, offset: 0.2 },
+                            { transform: 'scale(0) rotate(360deg)', opacity: 0 }
+                        ], {
+                            duration: 2000,
+                            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+                            fill: 'forwards'
+                        });
+                    }, delay);
+                }
+
+                setTimeout(() =>
+                {
+                    celebration.style.display = 'none';
+                    sparkleLayer.style.display = 'none';
+                }, 3500);
+
+                // Show success message with enhanced animation
+                const c = document.getElementById('clue');
                 c.classList.remove('hidden');
                 c.innerText = '¡Código descifrado! Cuando combinan amor y lógica, nada se les resiste. El siguiente reto los espera...';
-                document.getElementById('nextBtn2').disabled = false;
-                document.getElementById('nextBtn2').classList.remove('disabled');
-            } else {
+                c.style.opacity = '0';
+                c.style.transform = 'scale(0.9) translateY(20px)';
+                c.style.transition = 'all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                c.style.background = '#1a1a1a';
+                c.style.color = '#ffffff';
+                c.style.boxShadow = '0 10px 30px rgba(255,182,193,0.3)';
+                c.style.border = '2px solid #1a1a1a';
+                c.style.padding = '1.5em';
+                c.style.borderRadius = '12px';
+                setTimeout(() =>
+                {
+                    c.style.opacity = '1';
+                    c.style.transform = 'scale(1) translateY(0)';
+                }, 100);
+            }
+        else {
                 alert('Intenta de nuevo.');
             }
         });
