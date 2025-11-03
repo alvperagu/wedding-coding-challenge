@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto 1 - Lógica JavaScript</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">Reto de Código</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="puzzle1.html" class="nav-link">Retos</a>
+                <a href="final.html" class="nav-link">Final</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="puzzle-container fade-in">
+            <h1 class="puzzle-title">Reto 1 — Lógica JavaScript</h1>
+            <p class="puzzle-description">
+                Este es un reto de razonamiento en JavaScript. No ejecutes el código — analiza su lógica para determinar la salida.
+            </p>
+
+            <div class="code-block">
+                                <pre>
+function mystery(arr) {
+    let res = [];
+    for (let i = 0; i < arr.length; i++) {
+        let v = arr[i] * (i % 2 === 0 ? 2 : 3);
+        if (v % 4 === 0) res.unshift(v / 2);
+        else if (v % 3 === 0) res.push(v - 1);
+    }
+    return res.filter(x => x % 2 === 0).map(x => x + '').reverse().join('~');
+}
+console.log(mystery([2, 5, 4, 3, 6, 1]));</pre>
+            </div>
+
+            <div class="puzzle-form">
+                <label for="answer" class="input-label">¿Qué se mostrará en la consola?</label>
+                <input id="answer" type="text" class="puzzle-input" placeholder="ejemplo: 6-4-2" />
+                <button id="submitBtn" class="button submit-button">Verificar Respuesta</button>
+            </div>
+
+            <div id="clue" class="clue hidden"></div>
+
+            <div class="navigation-buttons">
+                <a href="puzzle2.html">
+                    <button id="nextBtn" class="button next-button disabled" disabled>
+                        Ir al Reto 2
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Obfuscated correct answer for puzzle1
+        function getObfuscatedAnswer1() {
+             const codes = [52,58,64,52,54,56]; // [2,8,14,2,4,6] + 50
+             const nums = codes.map(c => c - 50);
+             return nums.map(String).join('~');
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const ans = document.getElementById('answer').value.trim();
+            if (ans === getObfuscatedAnswer1()) {
+                const c = document.getElementById('clue');
+                c.classList.remove('hidden');
+                c.innerText = '🎉 ¡Correcto! Pista: La segunda posición (índice 2) es el número 7.';
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').classList.remove('disabled');
+            } else {
+                alert('No es correcto — inténtalo de nuevo. Analiza cuidadosamente la lógica y el orden de los números.');
+            }
+        });
+    </script>
+</body>
+</html>

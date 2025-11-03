@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto 2 - Reconstrucción</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">Reto de Código</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="puzzle1.html" class="nav-link">Retos</a>
+                <a href="final.html" class="nav-link">Final</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="puzzle-container fade-in">
+            <h1 class="puzzle-title">Reto 2 — Reconstrucción</h1>
+            <p class="puzzle-description">
+                Tomamos la palabra "encrypt" y permutamos sus letras usando la permutación secreta [3,1,4,2,6,7,5] (base 1).
+                El resultado es:
+            </p>
+            
+            <div class="code-block">
+                <pre>rcnrepy</pre>
+            </div>
+
+            <p class="puzzle-description">
+                ¿Qué letra está ahora en la posición 4 (base 1) de la cadena permutada?
+            </p>
+
+            <div class="puzzle-form">
+                <input id="ans2" type="text" class="puzzle-input" placeholder="una letra" maxlength="1" />
+                <button id="submit2" class="button submit-button">Verificar Respuesta</button>
+            </div>
+
+            <div id="clue2" class="clue hidden"></div>
+
+            <div class="navigation-buttons">
+                <a href="puzzle3.html">
+                    <button id="nextBtn2" class="button next-button disabled" disabled>
+                        Ir al Reto 3
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('submit2').addEventListener('click', () => {
+            const a = document.getElementById('ans2').value.trim().toLowerCase();
+            // calculate: original "encrypt" -> permutation [3,1,4,2,6,7,5] => r c n r e p y
+            // position 4 is "r"
+            if (a === 'r') {
+                const c = document.getElementById('clue2');
+                c.classList.remove('hidden');
+                c.innerText = '🎉 ¡Correcto! Pista: La cuarta posición es el número 5.';
+                document.getElementById('nextBtn2').disabled = false;
+                document.getElementById('nextBtn2').classList.remove('disabled');
+            } else {
+                alert('Intenta de nuevo.');
+            }
+        });
+    </script>
+</body>
+</html>

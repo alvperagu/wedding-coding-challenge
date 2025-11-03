@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto 4 - El Algoritmo Oculto</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">Reto de Código</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="puzzle1.html" class="nav-link">Retos</a>
+                <a href="final.html" class="nav-link">Final</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="puzzle-container fade-in">
+            <h1 class="puzzle-title">Reto 4 — El Algoritmo Oculto</h1>
+            <p class="puzzle-description">
+                Se ha descubierto un método de encriptación secreto. Solo tenemos los ejemplos a continuación.
+                Tu misión: deducir el patrón y encontrar la salida para <strong>"SECRET"</strong>.
+                Este es un reto de razonamiento manual — ningún cifrado conocido aplica directamente.
+            </p>
+
+            <div class="code-block">
+                <pre>
+CODE   → FQIG
+LOGIC  → NPLLB
+BRAIN  → DTCGO
+PUZZLE → RWCCQI</pre>
+            </div>
+
+            <p class="puzzle-description">¿Qué produce el cifrado para <strong>SECRET</strong>?</p>
+
+            <div class="puzzle-form">
+                <div style="position:relative;display:inline-block;">
+                    <input id="ans4" type="text" class="puzzle-input" placeholder="Tu respuesta (6 letras)" maxlength="6" />
+                    <span class="tooltip" style="position:absolute;top:-30px;left:0;background:var(--color-bg-secondary);color:var(--color-accent-primary);padding:4px 10px;border-radius:6px;font-size:0.9em;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:10;">Por favor, omite la letra ñ.</span>
+                </div>
+                <button id="submit4" class="button submit-button">Verificar Respuesta</button>
+            </div>
+
+            <div id="clue4" class="clue hidden"></div>
+
+            <div class="navigation-buttons">
+                <a href="final.html">
+                    <button id="nextBtn4" class="button next-button disabled" disabled>
+                        Ir al Reto Final
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Obfuscated answer: UFGEJX
+        function getObfuscatedAnswer() {
+            // Simple obfuscation: char codes
+            return [85,70,71,69,74,88].map(c=>String.fromCharCode(c)).join("");
+        }
+
+        // Tooltip logic
+        const ansInput = document.getElementById('ans4');
+        const tooltip = ansInput.parentElement.querySelector('.tooltip');
+        ansInput.addEventListener('focus', () => {
+            tooltip.style.opacity = 1;
+        });
+        ansInput.addEventListener('blur', () => {
+            tooltip.style.opacity = 0;
+        });
+
+        document.getElementById('submit4').addEventListener('click', () => {
+            const val = document.getElementById('ans4').value.trim().toUpperCase();
+            if (val === getObfuscatedAnswer()) {
+                const c = document.getElementById('clue4');
+                c.classList.remove('hidden');
+                c.innerText = '🔥 ¡Impresionante! Pista: La primera posición es el número 2.';
+                document.getElementById('nextBtn4').disabled = false;
+                document.getElementById('nextBtn4').classList.remove('disabled');
+            } else {
+                alert('Incorrecto — revisa los ejemplos cuidadosamente y busca los desplazamientos de letras por posición.');
+            }
+        });
+    </script>
+</body>
+</html>

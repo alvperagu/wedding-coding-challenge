@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reto 3 - Puzzle Deslizante</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 4px;
+            margin: var(--spacing-lg) auto;
+            width: 308px;
+            height: 308px;
+            padding: 4px;
+            background-color: var(--color-bg-primary);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--color-text-secondary);
+        }
+
+        .tile {
+            width: 100px;
+            height: 100px;
+            background-image: url('photo.jpeg');
+            background-size: 300px 300px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .tile:not(.empty):hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .tile:not(.empty):active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            cursor: grabbing;
+        }
+
+        .empty {
+            background: var(--color-bg-secondary);
+            cursor: default;
+            transition: background-color 0.2s ease;
+        }
+
+        .tile.movable {
+            position: relative;
+        }
+
+        .tile.movable::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid var(--color-accent-primary);
+            border-radius: var(--radius-sm);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .tile.movable:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="nav-logo">Reto de Código</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="puzzle1.html" class="nav-link">Retos</a>
+                <a href="final.html" class="nav-link">Final</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="puzzle-container fade-in">
+            <h1 class="puzzle-title">Reto 3 — Reconstruye la Foto</h1>
+            <p class="puzzle-description">
+                Reordena las piezas para restaurar la foto original. Solo puedes mover una pieza a la vez 
+                (hacia el espacio vacío).
+            </p>
+
+            <div class="board" id="board"></div>
+
+            <div id="clue3" class="clue hidden"></div>
+
+            <div class="navigation-buttons">
+                <a href="puzzle4.html">
+                    <button id="nextBtn3" class="button next-button disabled" disabled>
+                        Ir al Reto 4
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+<script>
+    const board = document.getElementById('board');
+    const size = 3;
+    const tiles = [];
+    let boardState = []; // Holds the current order of tile indices
+    let emptyIndex = size * size - 1; // Last one is empty
+
+    // Generate tiles
+    for (let i = 0; i < size * size; i++)
+    {
+        const tile = document.createElement('div');
+        tile.classList.add('tile');
+        if (i === emptyIndex)
+        {
+            tile.classList.add('empty');
+        } else
+        {
+            const x = (i % size) * -100;
+            const y = Math.floor(i / size) * -100;
+            tile.style.backgroundPosition = `${x}px ${y}px`;
+            tile.dataset.correct = i;
+        }
+        tiles.push(tile);
+        board.appendChild(tile);
+    }
+
+    // Initialize board state
+    boardState = [...Array(size * size).keys()];
+
+    // Shuffle board
+    shuffle();
+
+    // Handle clicks
+    board.addEventListener('click', (e) =>
+    {
+        const clickedTile = e.target;
+        if (clickedTile.classList.contains('empty')) return;
+
+        const tileIndex = boardState.indexOf(parseInt(clickedTile.dataset.correct));
+        if (isMovable(tileIndex))
+        {
+            moveTile(tileIndex);
+            checkWinCondition();
+        }
+    });
+
+    // Determine if a tile can move
+    function isMovable(tileIndex)
+    {
+        const tileRow = Math.floor(tileIndex / size);
+        const tileCol = tileIndex % size;
+        const emptyRow = Math.floor(emptyIndex / size);
+        const emptyCol = emptyIndex % size;
+
+        return (
+            (tileRow === emptyRow && Math.abs(tileCol - emptyCol) === 1) ||
+            (tileCol === emptyCol && Math.abs(tileRow - emptyRow) === 1)
+        );
+    }
+
+    // Move tile
+    function moveTile(tileIndex)
+    {
+        // Swap in boardState
+        [boardState[tileIndex], boardState[emptyIndex]] = [boardState[emptyIndex], boardState[tileIndex]];
+        emptyIndex = tileIndex;
+
+        // Redraw board
+        board.innerHTML = '';
+        for (let i = 0; i < boardState.length; i++)
+        {
+            board.appendChild(tiles[boardState[i]]);
+        }
+    }
+
+    // Shuffle until solvable
+    function shuffle()
+    {
+        do
+        {
+            boardState = [...Array(size * size).keys()];
+            for (let i = boardState.length - 2; i > 0; i--)
+            {
+                const j = Math.floor(Math.random() * (i + 1));
+                [boardState[i], boardState[j]] = [boardState[j], boardState[i]];
+            }
+        } while (!isSolvable(boardState));
+
+        emptyIndex = boardState.indexOf(size * size - 1);
+        board.innerHTML = '';
+        for (let i = 0; i < boardState.length; i++)
+        {
+            board.appendChild(tiles[boardState[i]]);
+        }
+    }
+
+    // Check if solvable (3x3)
+    function isSolvable(arr)
+    {
+        const invArr = arr.filter(x => x !== size * size - 1);
+        let invCount = 0;
+        for (let i = 0; i < invArr.length; i++)
+        {
+            for (let j = i + 1; j < invArr.length; j++)
+            {
+                if (invArr[i] > invArr[j]) invCount++;
+            }
+        }
+        return invCount % 2 === 0;
+    }
+
+    // Check win
+    function checkWin()
+    {
+        for (let i = 0; i < boardState.length - 1; i++)
+        {
+            if (boardState[i] !== i) return false;
+        }
+        return true;
+    }
+
+    function checkWinCondition()
+    {
+        if (checkWin())
+        {
+            const clue = document.getElementById('clue3');
+            clue.classList.remove('hidden');
+            clue.innerText = '✅ ¡Muy bien! Pista: La tercera posición es el número 9.';
+            document.getElementById('nextBtn3').disabled = false;
+            document.getElementById('nextBtn3').classList.remove('disabled');
+        }
+    }
+</script>
+
+</body>
+</html>
