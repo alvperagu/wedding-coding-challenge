@@ -2,18 +2,95 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Reto - El Algoritmo Oculto</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+    <!-- Inline responsive styles to ensure mobile behavior without editing external css -->
+    <style>
+        /* Ensure puzzle container has spacing so fixed elements don't overlap */
+        .puzzle-container {
+            padding-bottom: 24px;
+        }
+
+        /* Default button style (will be overridden by external CSS if present) */
+        #pistaBtn {
+            display: none;
+            /* controlled by JS */
+            background: linear-gradient(135deg, #ff6aa3, #ff2d7a);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(255, 45, 122, 0.18);
+            transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+            margin: 0 auto 12px auto;
+            display: block;
+            /* We'll set to block in JS when showing */
+            max-width: 420px;
+            text-align: center;
+        }
+
+        #pistaBtn.hidden {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(6px) scale(.995);
+        }
+
+        #pistaBtn:active,
+        #pistaBtn:focus {
+            transform: scale(.995);
+            outline: none;
+        }
+
+        /* Desktop / tablet */
+        @media (min-width: 601px) {
+            #pistaBtn {
+                font-size: 1rem;
+                padding: 10px 20px;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Mobile: full width above the input, large tappable area */
+        @media (max-width: 600px) {
+            #pistaBtn {
+                position: relative;
+                left: 0;
+                width: calc(100% - 32px);
+                margin-left: 16px;
+                margin-right: 16px;
+                margin-bottom: 12px;
+                padding: 14px 18px;
+                font-size: 1.05rem;
+                border-radius: 12px;
+                box-shadow: 0 10px 26px rgba(255, 45, 122, 0.22);
+            }
+
+            /* add extra spacing under the form to avoid accidental overlap with mobile UI */
+            .puzzle-form {
+                margin-bottom: 18px;
+            }
+        }
+
+        /* pista message style */
+        #pistaMsg {
+            max-width: 720px;
+            margin: 8px auto 0 auto;
+            padding: 10px 12px;
+        }
+    </style>
 </head>
 
 <body>
     <nav class="navbar">
         <div class="nav-content">
-            <div class="nav-links">
-            </div>
+            <div class="nav-links"></div>
         </div>
     </nav>
 
@@ -21,8 +98,8 @@
         <div class="puzzle-container fade-in">
             <h1 class="puzzle-title">Reto — El Algoritmo Oculto</h1>
             <p class="puzzle-description">
-                Se ha descubierto un método de encriptación secreto. Solo tenemos los ejemplos a continuación.<br>
-                Tu misión: deducir el patrón y encontrar la salida para <strong>"SECRET"</strong>.<br>
+                Se ha descubierto un método de encriptación secreto. Solo tenemos los ejemplos a continuación.<br />
+                Tu misión: deducir el patrón y encontrar la salida para <strong>"SECRET"</strong>.<br />
                 Este es un reto de razonamiento manual — ningún cifrado conocido aplica directamente.
             </p>
 
@@ -43,8 +120,8 @@ ENIGMA → GOKHLY
 
             <p class="puzzle-description">¿Qué produce el cifrado para <strong>SECRET</strong>?</p>
 
-            <!-- ✅ Moved the Pista button above the input -->
-            <button id="pistaBtn" class="button" style="display:none;margin-bottom:15px;">Pista</button>
+            <!-- Pista button ABOVE the input (responsive styles above) -->
+            <button id="pistaBtn" class="button hidden" aria-expanded="false" aria-controls="pistaMsg">Pista</button>
 
             <div class="puzzle-form">
                 <div style="position:relative;display:inline-block;">
@@ -69,14 +146,46 @@ ENIGMA → GOKHLY
     <script>
         // Intentos fallidos para mostrar pista
         let failCount = 0;
+
+        // Utility to show pista button (use block and remove hidden class)
+        function showPistaButton()
+        {
+            const btn = document.getElementById('pistaBtn');
+            if (!btn) return;
+            btn.classList.remove('hidden');
+            btn.style.display = 'block';
+            btn.setAttribute('aria-expanded', 'false');
+            // small entrance animation via inline style
+            btn.style.opacity = '0';
+            btn.style.transform = 'translateY(6px) scale(.995)';
+            setTimeout(() =>
+            {
+                btn.style.transition = 'opacity .28s ease, transform .28s cubic-bezier(.22,1,.36,1)';
+                btn.style.opacity = '1';
+                btn.style.transform = 'translateY(0) scale(1)';
+            }, 16);
+        }
+
+        // Reset failCount on page load and ensure elementos hidden
         window.addEventListener('DOMContentLoaded', () =>
         {
             failCount = 0;
-            document.getElementById('pistaBtn').style.display = 'none';
-            document.getElementById('pistaMsg').classList.add('hidden');
-            document.getElementById('pistaMsg').innerText = '';
+            const btn = document.getElementById('pistaBtn');
+            if (btn)
+            {
+                btn.classList.add('hidden');
+                btn.style.display = 'none';
+                btn.setAttribute('aria-expanded', 'false');
+            }
+            const pistaMsg = document.getElementById('pistaMsg');
+            if (pistaMsg)
+            {
+                pistaMsg.classList.add('hidden');
+                pistaMsg.innerText = '';
+            }
         });
 
+        // Algoritmo: reglas combinadas por índice (índice inicia en 1)
         function encrypt(word)
         {
             const vowels = 'AEIOU';
@@ -84,7 +193,7 @@ ENIGMA → GOKHLY
             {
                 const idx = i + 1;
                 if (idx % 2 === 0)
-                {
+                { // par
                     if (vowels.includes(ch))
                     {
                         let code = ch.charCodeAt(0) - 2;
@@ -100,7 +209,7 @@ ENIGMA → GOKHLY
                         return ch;
                     }
                 } else
-                {
+                { // impar
                     if (vowels.includes(ch))
                     {
                         let code = ch.charCodeAt(0) + 2;
@@ -119,6 +228,7 @@ ENIGMA → GOKHLY
             }).join('');
         }
 
+        // Obfuscated answer for "SECRET" with new rules (índice inicia en 1)
         function getObfuscatedAnswer()
         {
             let arr = ["S", "E", "C", "R", "E", "T"];
@@ -159,12 +269,14 @@ ENIGMA → GOKHLY
             return decoded;
         }
 
+        // Block copy/select on example block
         document.querySelectorAll('.nocopy-block').forEach(block =>
         {
             block.addEventListener('copy', e => e.preventDefault());
             block.addEventListener('contextmenu', e => e.preventDefault());
         });
 
+        // Submit handler
         document.getElementById('submit4').addEventListener('click', () =>
         {
             const val = document.getElementById('ans4').value.trim().toUpperCase();
@@ -295,24 +407,40 @@ ENIGMA → GOKHLY
                     c.style.transform = 'scale(1) translateY(0)';
                 }, 100);
                 failCount = 0;
-                document.getElementById('pistaBtn').style.display = 'none';
-                document.getElementById('pistaMsg').classList.add('hidden');
-                document.getElementById('pistaMsg').innerText = '';
+                // hide pista and mensaje when solving
+                const pb = document.getElementById('pistaBtn');
+                if (pb)
+                {
+                    pb.classList.add('hidden');
+                    pb.style.display = 'none';
+                }
+                const pmsg = document.getElementById('pistaMsg');
+                if (pmsg)
+                {
+                    pmsg.classList.add('hidden');
+                    pmsg.innerText = '';
+                }
             } else
             {
                 failCount++;
                 alert('Incorrecto — Asegurate que estás usando mayusculas. - Otra pista omite la letra Ñ');
                 if (failCount >= 3)
                 {
-                    document.getElementById('pistaBtn').style.display = 'inline-block';
+                    // show pista button
+                    showPistaButton();
                 }
             }
-            document.getElementById('pistaBtn').addEventListener('click', () =>
-            {
-                const pistaMsg = document.getElementById('pistaMsg');
-                pistaMsg.innerText = 'Como buen informático debes usar el inspector de Google Chrome para averiguar una pista. El resultado está ofuscado para que no te pases de listo.';
-                pistaMsg.classList.remove('hidden');
-            });
+        });
+
+        // Attach pista click handler ONCE, outside submit handler
+        document.getElementById('pistaBtn').addEventListener('click', () =>
+        {
+            const pistaMsg = document.getElementById('pistaMsg');
+            pistaMsg.innerText = 'Como buen informático debes usar el inspector de Google Chrome para averiguar una pista. El resultado está ofuscado para que no te pases de listo.';
+            pistaMsg.classList.remove('hidden');
+            // Expand aria state
+            const btn = document.getElementById('pistaBtn');
+            if (btn) btn.setAttribute('aria-expanded', 'true');
         });
     </script>
 </body>
