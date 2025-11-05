@@ -7,14 +7,12 @@
     <title>Reto - El Algoritmo Oculto</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Mobile styles are now in css/style.css -->
 </head>
 
 <body>
     <nav class="navbar">
         <div class="nav-content">
             <div class="nav-links">
-                
             </div>
         </div>
     </nav>
@@ -30,123 +28,137 @@
 
             <div class="code-block">
                 <div class="nocopy-block" style="position:relative;">
-                    <!-- // Reglas (índice inicia en 1):
-                    // 1. Si la letra está en posición impar (1,3,5...), vocales avanzan 2, consonantes retroceden 1.
-                    // 2. Si la letra está en posición par (2,4,6...), vocales retroceden 2, consonantes avanzan 1. -->
-                    <pre style="user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;pointer-events:none;">
+                    <pre
+                        style="user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;pointer-events:none;">
 CODE   → BMCC
 LOGIC  → KMFGB
 BRAIN  → ASCGM
 PUZZLE → OSYAKC
 ENIGMA → GOKHLY
                     </pre>
-                    <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;cursor:not-allowed;"></div>
+                    <div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;cursor:not-allowed;">
+                    </div>
                 </div>
             </div>
 
             <p class="puzzle-description">¿Qué produce el cifrado para <strong>SECRET</strong>?</p>
 
+            <!-- ✅ Moved the Pista button above the input -->
+            <button id="pistaBtn" class="button" style="display:none;margin-bottom:15px;">Pista</button>
+
             <div class="puzzle-form">
                 <div style="position:relative;display:inline-block;">
-                    <input id="ans4" type="text" class="puzzle-input" placeholder="Tu respuesta (6 letras)" maxlength="6" />
+                    <input id="ans4" type="text" class="puzzle-input" placeholder="Tu respuesta (6 letras)"
+                        maxlength="6" />
                 </div>
                 <button id="submit4" class="button submit-button">Verificar Respuesta</button>
             </div>
 
+            <div id="pistaMsg" class="clue hidden" style="margin-top:10px;"></div>
+
             <div id="clue4" class="clue hidden"></div>
             <div id="celebration"
-                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;"></div>
+                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999;">
+            </div>
             <div id="sparkle-layer"
-                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:10000;"></div>
-            <button id="pistaBtn" class="button" style="display:none;margin-top:10px;">Pista</button>
-            <div id="pistaMsg" class="clue hidden" style="margin-top:10px;"></div>
+                style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:10000;">
+            </div>
         </div>
     </main>
 
     <script>
         // Intentos fallidos para mostrar pista
         let failCount = 0;
-        // Reset failCount on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () =>
+        {
             failCount = 0;
             document.getElementById('pistaBtn').style.display = 'none';
             document.getElementById('pistaMsg').classList.add('hidden');
             document.getElementById('pistaMsg').innerText = '';
         });
-        // Algoritmo: reglas combinadas por índice (índice inicia en 1)
-        function encrypt(word) {
+
+        function encrypt(word)
+        {
             const vowels = 'AEIOU';
-            return word.toUpperCase().split('').map((ch, i) => {
+            return word.toUpperCase().split('').map((ch, i) =>
+            {
                 const idx = i + 1;
-                if (idx % 2 === 0) { // par
-                    if (vowels.includes(ch)) {
-                        // Vowel: shift -2
+                if (idx % 2 === 0)
+                {
+                    if (vowels.includes(ch))
+                    {
                         let code = ch.charCodeAt(0) - 2;
                         if (code < 65) code += 26;
                         return String.fromCharCode(code);
-                    } else if (ch >= 'A' && ch <= 'Z') {
-                        // Consonant: shift +1
+                    } else if (ch >= 'A' && ch <= 'Z')
+                    {
                         let code = ch.charCodeAt(0) + 1;
                         if (code > 90) code -= 26;
                         return String.fromCharCode(code);
-                    } else {
+                    } else
+                    {
                         return ch;
                     }
-                } else { // impar
-                    if (vowels.includes(ch)) {
-                        // Vowel: shift +2
+                } else
+                {
+                    if (vowels.includes(ch))
+                    {
                         let code = ch.charCodeAt(0) + 2;
                         if (code > 90) code -= 26;
                         return String.fromCharCode(code);
-                    } else if (ch >= 'A' && ch <= 'Z') {
-                        // Consonant: shift -1
+                    } else if (ch >= 'A' && ch <= 'Z')
+                    {
                         let code = ch.charCodeAt(0) - 1;
                         if (code < 65) code += 26;
                         return String.fromCharCode(code);
-                    } else {
+                    } else
+                    {
                         return ch;
                     }
                 }
             }).join('');
         }
 
-        // Obfuscated answer for "SECRET" with new rules (índice inicia en 1)
-        function getObfuscatedAnswer() {
+        function getObfuscatedAnswer()
+        {
             let arr = ["S", "E", "C", "R", "E", "T"];
             const vowels = 'AEIOU';
-            let s = arr.map((ch, i) => {
+            let s = arr.map((ch, i) =>
+            {
                 const idx = i + 1;
-                if (idx % 2 === 0) {
-                    // par: vocales -2, consonantes +1
-                    if (vowels.includes(ch)) {
+                if (idx % 2 === 0)
+                {
+                    if (vowels.includes(ch))
+                    {
                         let code = ch.charCodeAt(0) - 2;
                         if (code < 65) code += 26;
                         return String.fromCharCode(code);
-                    } else {
+                    } else
+                    {
                         let code = ch.charCodeAt(0) + 1;
                         if (code > 90) code -= 26;
                         return String.fromCharCode(code);
                     }
-                } else {
-                    // impar: vocales +2, consonantes -1
-                    if (vowels.includes(ch)) {
+                } else
+                {
+                    if (vowels.includes(ch))
+                    {
                         let code = ch.charCodeAt(0) + 2;
                         if (code > 90) code -= 26;
                         return String.fromCharCode(code);
-                    } else {
+                    } else
+                    {
                         let code = ch.charCodeAt(0) - 1;
                         if (code < 65) code += 26;
                         return String.fromCharCode(code);
                     }
                 }
             }).join('');
-            // Obfuscate: convert to char codes and back
             let codes = s.split('').map(c => c.charCodeAt(0) + 7);
             let decoded = codes.map(c => String.fromCharCode(c - 7)).join('');
             return decoded;
         }
 
-        // Bloquear copiar/seleccionar en el bloque de ejemplo
         document.querySelectorAll('.nocopy-block').forEach(block =>
         {
             block.addEventListener('copy', e => e.preventDefault());
@@ -156,8 +168,8 @@ ENIGMA → GOKHLY
         document.getElementById('submit4').addEventListener('click', () =>
         {
             const val = document.getElementById('ans4').value.trim().toUpperCase();
-            if (val === getObfuscatedAnswer()) {
-               // Celebration animation
+            if (val === getObfuscatedAnswer())
+            {
                 const celebration = document.getElementById('celebration');
                 const sparkleLayer = document.getElementById('sparkle-layer');
                 celebration.innerHTML = '';
@@ -165,7 +177,6 @@ ENIGMA → GOKHLY
                 celebration.style.display = 'block';
                 sparkleLayer.style.display = 'block';
 
-                // Create a background glow effect
                 const glow = document.createElement('div');
                 glow.style.position = 'fixed';
                 glow.style.top = '0';
@@ -184,7 +195,6 @@ ENIGMA → GOKHLY
                     easing: 'ease-in-out'
                 });
 
-                // Floating hearts with trails
                 const heartEmojis = ['💖', '❤️', '💝', '💕', '💗'];
                 for (let i = 0; i < 24; i++)
                 {
@@ -198,7 +208,6 @@ ENIGMA → GOKHLY
                     heart.style.filter = 'blur(0.2px)';
                     celebration.appendChild(heart);
 
-                    // Create heart trail
                     const trail = document.createElement('div');
                     trail.style.position = 'absolute';
                     trail.style.left = heart.style.left;
@@ -232,7 +241,6 @@ ENIGMA → GOKHLY
                     });
                 }
 
-                // Sparkles with color variation
                 const sparkleColors = ['#FFD700', '#FF69B4', '#87CEEB', '#DDA0DD'];
                 for (let i = 0; i < 40; i++)
                 {
@@ -269,7 +277,6 @@ ENIGMA → GOKHLY
                     sparkleLayer.style.display = 'none';
                 }, 3500);
 
-                // Show success message with enhanced animation
                 const c = document.getElementById('clue4');
                 c.classList.remove('hidden');
                 c.innerHTML = "El amor también se programa, línea a línea, hasta formar el algoritmo perfecto. ❤️<br><br><b>Password[3]:</b> Calcula el .length() de la string que forma el primer apellido de la novia.";
@@ -291,19 +298,21 @@ ENIGMA → GOKHLY
                 document.getElementById('pistaBtn').style.display = 'none';
                 document.getElementById('pistaMsg').classList.add('hidden');
                 document.getElementById('pistaMsg').innerText = '';
-            } else {
+            } else
+            {
                 failCount++;
                 alert('Incorrecto — Asegurate que estás usando mayusculas. - Otra pista omite la letra Ñ');
-                if (failCount >= 3) {
+                if (failCount >= 3)
+                {
                     document.getElementById('pistaBtn').style.display = 'inline-block';
                 }
             }
-        // Mostrar pista al hacer click
-        document.getElementById('pistaBtn').addEventListener('click', () => {
-            const pistaMsg = document.getElementById('pistaMsg');
-            pistaMsg.innerText = 'Como buen informático debes usar el inspector de Google Chrome para averiguar una pista. El resultado está ofuscado para que no te pases de listo.';
-            pistaMsg.classList.remove('hidden');
-        });
+            document.getElementById('pistaBtn').addEventListener('click', () =>
+            {
+                const pistaMsg = document.getElementById('pistaMsg');
+                pistaMsg.innerText = 'Como buen informático debes usar el inspector de Google Chrome para averiguar una pista. El resultado está ofuscado para que no te pases de listo.';
+                pistaMsg.classList.remove('hidden');
+            });
         });
     </script>
 </body>
